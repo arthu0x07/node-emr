@@ -5,6 +5,7 @@ import {
   Post,
   UsePipes,
 } from '@nestjs/common'
+import { hash } from 'bcryptjs'
 import { ZodValidationPipe } from 'src/pipes/zod-validation-pipes'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { z } from 'zod'
@@ -34,11 +35,13 @@ export class CreateAccControler {
       throw new ConflictException('user email exits on database.')
     }
 
+    const hashedPassword = await hash(password, 8)
+
     await this.prisma.user.create({
       data: {
         name,
         email,
-        password,
+        password: hashedPassword,
       },
     })
   }
