@@ -3,7 +3,7 @@ import { AuthGuard } from '@nestjs/passport'
 import { z } from 'zod'
 
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipes'
-import { PrismaService } from '@/infra/prisma/prisma.service'
+import { PrismaService } from '@/database/prisma/prisma.service'
 
 const pageQueryParamsSchema = z
   .string()

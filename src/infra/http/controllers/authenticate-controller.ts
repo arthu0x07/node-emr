@@ -10,7 +10,7 @@ import { z } from 'zod'
 import { compare } from 'bcryptjs'
 
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipes'
-import { PrismaService } from '@/infra/prisma/prisma.service'
+import { PrismaService } from '@/database/prisma/prisma.service'
 
 const authenticateBodySchema = z.object({
   email: z.string().email(),
