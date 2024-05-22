@@ -1,10 +1,17 @@
-import { Controller, Post, UseGuards, Body } from '@nestjs/common'
+import {
+  Controller,
+  Post,
+  UseGuards,
+  Body,
+  ConflictException,
+} from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
+import { z } from 'zod'
+
+import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipes'
 import { CurrentUser } from '@/auth/current-user-decorator'
 import { UserPayload } from '@/auth/jwt-strategy'
-import { ZodValidationPipe } from '@/pipes/zod-validation-pipes'
-import { PrismaService } from '@/prisma/prisma.service'
-import { z } from 'zod'
+import { PrismaService } from '@/infra/prisma/prisma.service'
 
 const createQuestionBodySchema = z.object({
   title: z.string(),
@@ -30,6 +37,16 @@ export class CreateQuestionController {
 
     const { title, content } = body
     const { slug } = this.convertToSlug(title)
+
+    const slugExists = await this.prisma.question.findUnique({
+      where: {
+        slug,
+      },
+    })
+
+    if (slugExists) {
+      throw new ConflictException('user email exits on database.')
+    }
 
     await this.prisma.question.create({
       data: {
