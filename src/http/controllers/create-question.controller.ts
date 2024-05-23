@@ -16,6 +16,7 @@ import { PrismaService } from '@/database/prisma/prisma.service'
 const createQuestionBodySchema = z.object({
   title: z.string(),
   content: z.string(),
+  tags: z.array(z.string()),
 })
 
 type CreateQuestionBodySchema = z.infer<typeof createQuestionBodySchema>
@@ -35,7 +36,7 @@ export class CreateQuestionController {
   ) {
     const userId = user.sub
 
-    const { title, content } = body
+    const { title, content, tags } = body
     const { slug } = this.convertToSlug(title)
 
     const slugExists = await this.prisma.question.findUnique({
@@ -45,17 +46,42 @@ export class CreateQuestionController {
     })
 
     if (slugExists) {
-      throw new ConflictException('user email exits on database.')
+      throw new ConflictException('Question already exists in the database.')
     }
 
-    await this.prisma.question.create({
+    const existingTags = await this.prisma.tag.findMany({
+      where: {
+        name: {
+          in: tags,
+        },
+      },
+    })
+
+    if (existingTags.length !== tags.length) {
+      const nonExistingTags = tags.filter(
+        (tag) => !existingTags.some((existingTag) => existingTag.name === tag),
+      )
+      throw new ConflictException(
+        `invalid tag(s) provided: ${nonExistingTags.join(', ')}`,
+      )
+    }
+
+    const createdQuestion = await this.prisma.question.create({
       data: {
         authorID: userId,
         title,
         content,
         slug,
+        tags: {
+          connect: existingTags.map((tag) => ({ id: tag.id })),
+        },
+      },
+      include: {
+        tags: true,
       },
     })
+
+    return createdQuestion
   }
 
   // used to create a better slug with no accents and white spaces
