@@ -12,6 +12,7 @@ import { FetchRecentQuestions } from './controllers/fetch-recent-questions'
 import { DeleteQuestionController } from './controllers/delete-question.controller'
 import { CreateAnswerController } from './controllers/create-answer.controller'
 import { EditAnswerController } from './controllers/edit-answer.controller'
+import { DeleteAnswerController } from './controllers/delete-answer.controller'
 
 @Module({
   imports: [DatabaseModule],
@@ -25,6 +26,7 @@ import { EditAnswerController } from './controllers/edit-answer.controller'
     DeleteQuestionController,
     CreateAnswerController,
     EditAnswerController,
+    DeleteAnswerController,
   ],
 })
 export class HttpModule {}
