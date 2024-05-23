@@ -13,6 +13,7 @@ import { DeleteQuestionController } from './controllers/delete-question.controll
 import { CreateAnswerController } from './controllers/create-answer.controller'
 import { EditAnswerController } from './controllers/edit-answer.controller'
 import { DeleteAnswerController } from './controllers/delete-answer.controller'
+import { GetQuestionAnswersController } from './controllers/get-answers-in-question.controller'
 
 @Module({
   imports: [DatabaseModule],
@@ -27,6 +28,7 @@ import { DeleteAnswerController } from './controllers/delete-answer.controller'
     CreateAnswerController,
     EditAnswerController,
     DeleteAnswerController,
+    GetQuestionAnswersController,
   ],
 })
 export class HttpModule {}
