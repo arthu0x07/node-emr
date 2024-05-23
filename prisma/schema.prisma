@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -19,11 +13,14 @@ enum UserRole {
 }
 
 model User {
-  id        String     @id @default(uuid())
-  name      String
-  email     String     @unique
-  password  String
+  id       String @id @default(uuid())
+  name     String
+  email    String @unique
+  password String
+
   questions Question[]
+  answer    Answer[]
+  comments  Comment[]
 
   @@map("users")
 }
@@ -36,8 +33,71 @@ model Question {
   createdAt    DateTime  @default(now()) @map("created_at")
   updatedAt    DateTime? @updatedAt @map("updated_at")
   authorID     String    @map("author_id")
-  author     User    @relation(fields: [authorID], references: [id])
-  // needs: selectedAnswer  ; allAnswers ; attachments (receives a url (.png or .mp4 or .pdf) to content); 
+  bestAnwserId String?   @unique @map("best_awnser_id")
+
+  author      User         @relation(fields: [authorID], references: [id])
+  bestAnswer  Answer?      @relation("bestAnwser", fields: [bestAnwserId], references: [id])
+  answer      Answer[]
+  comments    Comment[]
+  attachments Attachment[]
+  tags        Tag[]        @relation("questionTags")
 
   @@map("questions")
+}
+
+model Answer {
+  id         String    @id @default(uuid())
+  content    String
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime? @updatedAt @map("updated_at")
+  authorID   String    @map("author_id")
+  questionId String    @map("question_id")
+
+  author User @relation(fields: [authorID], references: [id])
+
+  bestAnwserOn Question? @relation("bestAnwser")
+
+  question    Question     @relation(fields: [questionId], references: [id])
+  comments    Comment[]
+  attachments Attachment[]
+
+  @@map("awnsers")
+}
+
+model Comment {
+  id         String    @id @default(uuid())
+  content    String
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime? @updatedAt @map("updated_at")
+  authorId   String    @map("author_id")
+  parentId   String
+  questionId String?   @map("question_id")
+  answerId   String?   @map("anwser_id")
+
+  author   User      @relation(fields: [authorId], references: [id])
+  question Question? @relation(fields: [questionId], references: [id])
+  answer   Answer?   @relation(fields: [answerId], references: [id])
+
+  @@map("comments")
+}
+
+model Attachment {
+  id         String  @id @default(uuid())
+  title      String
+  url        String
+  questionId String? @map("question_id")
+  answerId   String? @map("anwser_id")
+
+  question Question? @relation(fields: [questionId], references: [id])
+  answer   Answer?   @relation(fields: [answerId], references: [id])
+
+  @@map("attachments")
+}
+
+model Tag {
+  id        String     @id @default(uuid())
+  name      String
+  questions Question[] @relation("questionTags")
+
+  @@map("tags")
 }
