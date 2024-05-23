@@ -6,6 +6,7 @@ import { CreateQuestionController } from './controllers/create-question.controll
 import { FetchRecentQuestions } from './controllers/fetch-recent-questions'
 
 import { DatabaseModule } from '@/database/database-module'
+import { GetQuestionBySlug } from './controllers/get-questions-by-slug.controller'
 
 @Module({
   imports: [DatabaseModule],
@@ -14,6 +15,7 @@ import { DatabaseModule } from '@/database/database-module'
     AuthenticateController,
     CreateQuestionController,
     FetchRecentQuestions,
+    GetQuestionBySlug,
   ],
 })
 export class HttpModule {}
