@@ -54,13 +54,12 @@ export class CreateAnswerController {
         questionId,
         authorID: userId,
       },
-      select: {
-        content: true,
-      },
     })
 
     if (!createdAnswer) {
       throw new BadRequestException()
     }
+
+    return { ...createdAnswer }
   }
 }

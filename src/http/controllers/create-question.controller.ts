@@ -81,7 +81,7 @@ export class CreateQuestionController {
       },
     })
 
-    return createdQuestion
+    return { ...createdQuestion }
   }
 
   // used to create a better slug with no accents and white spaces
