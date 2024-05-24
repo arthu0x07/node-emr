@@ -14,6 +14,7 @@ import { EditAnswerController } from './controllers/edit-answer.controller'
 import { DeleteAnswerController } from './controllers/delete-answer.controller'
 import { GetQuestionAnswersController } from './controllers/get-answers-in-question.controller'
 import { SelectBestAnswerController } from './controllers/select-best-answer.controller'
+import { CreateCommentInQuestion } from './controllers/create-comment-in-question'
 
 import { QuestionService } from './services/question.service'
 
@@ -32,7 +33,8 @@ import { QuestionService } from './services/question.service'
     DeleteAnswerController,
     GetQuestionAnswersController,
     SelectBestAnswerController,
+    CreateCommentInQuestion,
   ],
-  providers: [QuestionService], // Adicione o QuestionService aqui nos providers
+  providers: [QuestionService],
 })
 export class HttpModule {}
