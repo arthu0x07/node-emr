@@ -17,6 +17,7 @@ import { SelectBestAnswerController } from './controllers/select-best-answer.con
 import { CreateCommentInQuestion } from './controllers/create-comment-in-question'
 import { DeleteCommentInQuestion } from './controllers/delete-comment-in-question'
 import { CreateCommentInAnswer } from './controllers/create-comment-in-answer.controller'
+import { DeleteCommentInAnswer } from './controllers/delete-comment-in-answer'
 
 import { QuestionService } from './services/question.service'
 
@@ -38,6 +39,7 @@ import { QuestionService } from './services/question.service'
     CreateCommentInQuestion,
     DeleteCommentInQuestion,
     CreateCommentInAnswer,
+    DeleteCommentInAnswer,
   ],
   providers: [QuestionService],
 })
