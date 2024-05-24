@@ -33,7 +33,7 @@ model Question {
   createdAt    DateTime  @default(now()) @map("created_at")
   updatedAt    DateTime? @updatedAt @map("updated_at")
   authorID     String    @map("author_id")
-  bestAnwserId String?   @unique @map("best_awnser_id")
+  bestAnwserId String?   @unique @map("best_answer_id")
 
   author      User         @relation(fields: [authorID], references: [id])
   bestAnswer  Answer?      @relation("bestAnwser", fields: [bestAnwserId], references: [id])
@@ -61,7 +61,7 @@ model Answer {
   comments    Comment[]
   attachments Attachment[]
 
-  @@map("awnsers")
+  @@map("answer")
 }
 
 model Comment {
@@ -71,7 +71,7 @@ model Comment {
   updatedAt  DateTime? @updatedAt @map("updated_at")
   authorId   String    @map("author_id")
   questionId String?   @map("question_id")
-  answerId   String?   @map("anwser_id")
+  answerId   String?   @map("answer_id")
 
   author   User      @relation(fields: [authorId], references: [id])
   question Question? @relation(fields: [questionId], references: [id])
@@ -85,7 +85,7 @@ model Attachment {
   title      String
   url        String
   questionId String? @map("question_id")
-  answerId   String? @map("anwser_id")
+  answerId   String? @map("answer_id")
 
   question Question? @relation(fields: [questionId], references: [id])
   answer   Answer?   @relation(fields: [answerId], references: [id])
