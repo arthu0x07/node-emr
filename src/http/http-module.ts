@@ -13,6 +13,7 @@ import { CreateAnswerController } from './controllers/create-answer.controller'
 import { EditAnswerController } from './controllers/edit-answer.controller'
 import { DeleteAnswerController } from './controllers/delete-answer.controller'
 import { GetQuestionAnswersController } from './controllers/get-answers-in-question.controller'
+import { SelectBestAnswerController } from './controllers/select-best-answer.controller'
 
 import { QuestionService } from './services/question.service'
 
@@ -30,6 +31,7 @@ import { QuestionService } from './services/question.service'
     EditAnswerController,
     DeleteAnswerController,
     GetQuestionAnswersController,
+    SelectBestAnswerController,
   ],
   providers: [QuestionService], // Adicione o QuestionService aqui nos providers
 })
