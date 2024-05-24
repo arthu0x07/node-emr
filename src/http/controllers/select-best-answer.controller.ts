@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Controller,
   HttpCode,
   NotFoundException,
@@ -32,15 +33,12 @@ export class SelectBestAnswerController {
     })
 
     if (!answer) {
-      throw new NotFoundException('answer not exist')
+      throw new NotFoundException('Answer with the provider id not found')
     }
 
     const question = await this.prisma.question.findUnique({
       where: {
         id: answer.questionId,
-      },
-      select: {
-        authorID: true,
       },
     })
 
@@ -61,7 +59,7 @@ export class SelectBestAnswerController {
     })
 
     if (!updatedQuestion) {
-      throw new NotFoundException('Question not found.')
+      throw new BadRequestException()
     }
   }
 }
