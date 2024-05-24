@@ -6,9 +6,12 @@ import {
   NotFoundException,
   BadRequestException,
   Put,
+  UnauthorizedException,
 } from '@nestjs/common'
 import { z } from 'zod'
 import { AuthGuard } from '@nestjs/passport'
+import { UserPayload } from '@/auth/jwt-strategy'
+import { CurrentUser } from '@/auth/current-user-decorator'
 import { ZodValidationPipe } from '@/http/pipes/zod-validation-pipes'
 import { PrismaService } from '@/database/prisma/prisma.service'
 
@@ -27,19 +30,25 @@ export class EditAnswerController {
 
   @Put()
   async handle(
+    @CurrentUser() user: UserPayload,
     @Param('id') answerId: string,
     @Body(bodyValidationPipe) body: EditAnswerBodySchema,
   ) {
+    const userid = user.sub
     const { content } = body
 
-    const answerExists = await this.prisma.answer.findUnique({
+    const answer = await this.prisma.answer.findUnique({
       where: {
         id: answerId,
       },
     })
 
-    if (!answerExists) {
-      throw new NotFoundException(`Question with the provided ID not found`)
+    if (!answer) {
+      throw new NotFoundException('Answer with the provider id not found')
+    }
+
+    if (answer.authorID !== userid) {
+      throw new UnauthorizedException()
     }
 
     const editedAnswer = await this.prisma.answer.update({
