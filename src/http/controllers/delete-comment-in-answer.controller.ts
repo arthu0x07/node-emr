@@ -16,7 +16,7 @@ import { PrismaService } from '@/database/prisma/prisma.service'
 
 @Controller('/answers/comments/:id')
 @UseGuards(AuthGuard('jwt'))
-export class DeleteCommentInAnswer {
+export class DeleteCommentInAnswerController {
   constructor(private prisma: PrismaService) {}
 
   @Delete()

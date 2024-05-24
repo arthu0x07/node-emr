@@ -11,7 +11,7 @@ import { PrismaService } from '@/database/prisma/prisma.service'
 
 @Controller('/questions/:slug')
 @UseGuards(AuthGuard('jwt'))
-export class GetQuestionBySlug {
+export class GetQuestionBySlugController {
   constructor(private prisma: PrismaService) {}
 
   @Get()

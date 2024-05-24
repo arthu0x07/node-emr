@@ -23,7 +23,7 @@ type CreateAnswerBodySchema = z.infer<typeof createAnswerBodySchema>
 
 @Controller('/questions/:questionId/comments')
 @UseGuards(AuthGuard('jwt'))
-export class CreateCommentInQuestion {
+export class CreateCommentInQuestionController {
   constructor(private prisma: PrismaService) {}
 
   @Post()
