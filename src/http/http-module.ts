@@ -7,7 +7,7 @@ import { AuthenticateController } from './controllers/authenticate-controller'
 import { CreateQuestionController } from './controllers/create-question.controller'
 import { EditQuestionController } from './controllers/edit-question.controller'
 import { GetQuestionBySlug } from './controllers/get-questions-by-slug.controller'
-import { FetchRecentQuestions } from './controllers/fetch-recent-questions'
+import { GetRecentQuestions } from './controllers/get-recent-questions'
 import { DeleteQuestionController } from './controllers/delete-question.controller'
 import { CreateAnswerController } from './controllers/create-answer.controller'
 import { EditAnswerController } from './controllers/edit-answer.controller'
@@ -23,7 +23,7 @@ import { QuestionService } from './services/question.service'
     CreateAccControler,
     AuthenticateController,
     CreateQuestionController,
-    FetchRecentQuestions,
+    GetRecentQuestions,
     GetQuestionBySlug,
     EditQuestionController,
     DeleteQuestionController,

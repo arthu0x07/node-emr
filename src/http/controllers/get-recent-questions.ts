@@ -18,7 +18,7 @@ type PageQueryParamsSchema = z.infer<typeof pageQueryParamsSchema>
 
 @Controller('/questions')
 @UseGuards(AuthGuard('jwt'))
-export class FetchRecentQuestions {
+export class GetRecentQuestions {
   constructor(private prisma: PrismaService) {}
 
   @Get()
