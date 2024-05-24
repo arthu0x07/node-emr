@@ -6,6 +6,7 @@ import {
   HttpCode,
   NotFoundException,
   UnauthorizedException,
+  BadRequestException,
 } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 
@@ -40,10 +41,14 @@ export class DeleteCommentController {
       throw new UnauthorizedException()
     }
 
-    await this.prisma.comment.delete({
+    const deletedComment = await this.prisma.comment.delete({
       where: {
         id: commentId,
       },
     })
+
+    if (!deletedComment) {
+      throw new BadRequestException()
+    }
   }
 }
