@@ -1,4 +1,4 @@
-import { Controller, Post, UseGuards, Body, Param } from '@nestjs/common'
+import { Controller, UseGuards, Body, Param, Put } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 import { z } from 'zod'
 
@@ -24,7 +24,7 @@ export class EditQuestionController {
     private questionService: QuestionService,
   ) {}
 
-  @Post()
+  @Put()
   async handle(
     @Body(bodyValidationPipe) body: EditQuestionBodySchema,
     @Param('id') questionId: string,
