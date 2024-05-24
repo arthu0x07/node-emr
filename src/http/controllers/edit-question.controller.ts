@@ -1,6 +1,17 @@
-import { Controller, UseGuards, Body, Param, Put } from '@nestjs/common'
+import {
+  Controller,
+  UseGuards,
+  Body,
+  Param,
+  Put,
+  NotFoundException,
+  UnauthorizedException,
+  BadRequestException,
+} from '@nestjs/common'
 import { z } from 'zod'
 import { AuthGuard } from '@nestjs/passport'
+import { UserPayload } from '@/auth/jwt-strategy'
+import { CurrentUser } from '@/auth/current-user-decorator'
 import { ZodValidationPipe } from '@/http/pipes/zod-validation-pipes'
 import { PrismaService } from '@/database/prisma/prisma.service'
 import { QuestionService } from '@/http/services/question.service'
@@ -25,12 +36,29 @@ export class EditQuestionController {
 
   @Put()
   async handle(
+    @CurrentUser() user: UserPayload,
     @Body(bodyValidationPipe) body: EditQuestionBodySchema,
     @Param('id') questionId: string,
   ) {
+    const userId = user.sub
     const { title, content, tags } = body
+
     await this.questionService.validateTags(tags)
     const slug = await this.questionService.generateUniqueSlug(title)
+
+    const question = await this.prisma.question.findUnique({
+      where: {
+        id: questionId,
+      },
+    })
+
+    if (!question) {
+      throw new NotFoundException('Question with the provider id not found')
+    }
+
+    if (question.authorID !== userId) {
+      throw new UnauthorizedException()
+    }
 
     const updatedQuestion = await this.prisma.question.update({
       where: {
@@ -49,8 +77,10 @@ export class EditQuestionController {
       },
     })
 
-    return { updatedQuestion }
-  }
+    if (!updatedQuestion) {
+      throw new BadRequestException()
+    }
 
-  // used to create a better slug with no accents and white spaces
+    return { ...updatedQuestion }
+  }
 }
