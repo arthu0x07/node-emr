@@ -32,8 +32,6 @@ export class EditAnswerController {
   ) {
     const { content } = body
 
-    console.log(answerId)
-
     const answerExists = await this.prisma.answer.findUnique({
       where: {
         id: answerId,

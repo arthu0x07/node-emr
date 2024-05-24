@@ -23,7 +23,6 @@ export class SelectBestAnswerController {
     @CurrentUser() user: UserPayload,
     @Param('answerId') answerId: string,
   ) {
-    console.log(user)
     const userId = user.sub
 
     const answer = await this.prisma.answer.findUnique({

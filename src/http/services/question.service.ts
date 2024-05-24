@@ -28,8 +28,6 @@ export class QuestionService {
       select: { title: true },
     })
 
-    console.log('generate basic slug', slug)
-
     return `${slug}-${titleExists.length}`
   }
 
