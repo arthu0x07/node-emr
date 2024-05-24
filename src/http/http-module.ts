@@ -19,6 +19,7 @@ import { DeleteCommentInQuestion } from './controllers/delete-comment-in-questio
 import { CreateCommentInAnswer } from './controllers/create-comment-in-answer.controller'
 import { DeleteCommentInAnswer } from './controllers/delete-comment-in-answer'
 import { GetCommentsInAnswerController } from './controllers/get-comments-in-answer-controller'
+import { GetCommentsInQuestionController } from './controllers/get-comments-in-questions-controller'
 
 import { QuestionService } from './services/question.service'
 
@@ -42,6 +43,7 @@ import { QuestionService } from './services/question.service'
     CreateCommentInAnswer,
     DeleteCommentInAnswer,
     GetCommentsInAnswerController,
+    GetCommentsInQuestionController,
   ],
   providers: [QuestionService],
 })
