@@ -15,6 +15,7 @@ import { DeleteAnswerController } from './controllers/delete-answer.controller'
 import { GetQuestionAnswersController } from './controllers/get-answers-in-question.controller'
 import { SelectBestAnswerController } from './controllers/select-best-answer.controller'
 import { CreateCommentInQuestion } from './controllers/create-comment-in-question'
+import { DeleteCommentController } from './controllers/delete-comment-in-question'
 
 import { QuestionService } from './services/question.service'
 
@@ -34,6 +35,7 @@ import { QuestionService } from './services/question.service'
     GetQuestionAnswersController,
     SelectBestAnswerController,
     CreateCommentInQuestion,
+    DeleteCommentController,
   ],
   providers: [QuestionService],
 })
