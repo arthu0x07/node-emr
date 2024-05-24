@@ -6,7 +6,6 @@ import {
   BadRequestException,
 } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
-
 import { PrismaService } from '@/database/prisma/prisma.service'
 
 @Controller('/questions/:slug')

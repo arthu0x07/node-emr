@@ -6,8 +6,8 @@ import {
   Query,
 } from '@nestjs/common'
 import { z } from 'zod'
-import { PrismaService } from '@/database/prisma/prisma.service'
 import { ZodValidationPipe } from '../pipes/zod-validation-pipes'
+import { PrismaService } from '@/database/prisma/prisma.service'
 
 const pageQueryParamSchema = z
   .string()

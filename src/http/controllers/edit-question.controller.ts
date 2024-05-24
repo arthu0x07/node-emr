@@ -1,9 +1,8 @@
 import { Controller, UseGuards, Body, Param, Put } from '@nestjs/common'
-import { AuthGuard } from '@nestjs/passport'
 import { z } from 'zod'
-
-import { PrismaService } from '@/database/prisma/prisma.service'
+import { AuthGuard } from '@nestjs/passport'
 import { ZodValidationPipe } from '@/http/pipes/zod-validation-pipes'
+import { PrismaService } from '@/database/prisma/prisma.service'
 import { QuestionService } from '@/http/services/question.service'
 
 const editQuestionBodySchema = z.object({

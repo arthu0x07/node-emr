@@ -9,7 +9,6 @@ import {
   BadRequestException,
 } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
-
 import { CurrentUser } from '@/auth/current-user-decorator'
 import { UserPayload } from '@/auth/jwt-strategy'
 import { PrismaService } from '@/database/prisma/prisma.service'
