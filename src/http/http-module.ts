@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common'
 
 import { DatabaseModule } from '@/database/database-module'
+import { AttachmentsModule } from '@/modules/attachment/upload-attachment.module'
 
 import { CreateAccControler } from './controllers/create-acc.controller'
 import { AuthenticateController } from './controllers/authenticate-controller'
@@ -20,31 +21,33 @@ import { CreateCommentInAnswerController } from './controllers/create-comment-in
 import { DeleteCommentInAnswerController } from './controllers/delete-comment-in-answer.controller'
 import { GetCommentsInAnswerController } from './controllers/get-comments-in-answer-controller'
 import { GetCommentsInQuestionController } from './controllers/get-comments-in-questions-controller'
+import { UploadAttachmentController } from '../modules/attachment/upload-attachment.controller'
 
 import { QuestionService } from './services/question.service'
 
 @Module({
-  imports: [DatabaseModule],
-  controllers: [
-    CreateAccControler,
-    AuthenticateController,
-    CreateQuestionController,
-    EditQuestionController,
-    GetQuestionBySlugController,
-    GetRecentQuestionsController,
-    DeleteQuestionController,
-    CreateAnswerController,
-    EditAnswerController,
-    DeleteAnswerController,
-    GetQuestionAnswersController,
-    SelectBestAnswerController,
-    CreateCommentInQuestionController,
-    DeleteCommentInQuestionController,
-    CreateCommentInAnswerController,
-    DeleteCommentInAnswerController,
-    GetCommentsInAnswerController,
-    GetCommentsInQuestionController,
-  ],
+  imports: [AttachmentsModule, DatabaseModule],
+  // controllers: [
+  //   CreateAccControler,
+  //   AuthenticateController,
+  //   CreateQuestionController,
+  //   EditQuestionController,
+  //   GetQuestionBySlugController,
+  //   GetRecentQuestionsController,
+  //   DeleteQuestionController,
+  //   CreateAnswerController,
+  //   EditAnswerController,
+  //   DeleteAnswerController,
+  //   GetQuestionAnswersController,
+  //   SelectBestAnswerController,
+  //   CreateCommentInQuestionController,
+  //   DeleteCommentInQuestionController,
+  //   CreateCommentInAnswerController,
+  //   DeleteCommentInAnswerController,
+  //   GetCommentsInAnswerController,
+  //   GetCommentsInQuestionController,
+  //   UploadAttachmentController,
+  // ],
   providers: [QuestionService],
 })
 export class HttpModule {}
