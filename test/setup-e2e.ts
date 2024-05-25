@@ -29,6 +29,6 @@ beforeAll(async () => {
 })
 
 afterAll(async () => {
-  await prisma.$executeRawUnsafe(`DROP SCHEMA IF EXISTS "${schemaId}" CASCADE`)
+  await prisma.$executeRawUnsafe(`DROP SCHEMA IF EXISTS "${schemaId}" CASCADE`) // To see the alternative database, comment out this line and check it in DBeaver.
   await prisma.$disconnect()
 })
