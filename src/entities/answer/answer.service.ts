@@ -86,7 +86,7 @@ export class AnswerService {
 
     const updatedQuestion = await this.prisma.question.update({
       where: { id: answer.questionId },
-      data: { bestAnwserId: answerId },
+      data: { bestAnswerId: answerId },
     })
 
     if (!updatedQuestion) {

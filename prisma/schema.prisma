@@ -7,59 +7,51 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum UserRole {
-  STUDENT
-  INSTRUCTOR
-}
-
 model User {
-  id       String @id @default(uuid())
-  name     String
-  email    String @unique
-  password String
-
-  questions Question[]
+  id        String     @id @default(uuid())
+  name      String
+  email     String     @unique
+  password  String
   answer    Answer[]
   comments  Comment[]
+  questions Question[]
 
   @@map("users")
 }
 
 model Question {
-  id           String    @id @default(uuid())
+  id           String       @id @default(uuid())
   title        String
-  slug         String    @unique
+  slug         String       @unique
   content      String
-  createdAt    DateTime  @default(now()) @map("created_at")
-  updatedAt    DateTime? @updatedAt @map("updated_at")
-  authorID     String    @map("author_id")
-  bestAnwserId String?   @unique @map("best_answer_id")
-
-  author      User         @relation(fields: [authorID], references: [id])
-  bestAnswer  Answer?      @relation("bestAnwser", fields: [bestAnwserId], references: [id])
-  answer      Answer[]
-  comments    Comment[]
-  attachments Attachment[]
-  tags        Tag[]        @relation("questionTags")
+  createdAt    DateTime     @default(now()) @map("created_at")
+  updatedAt    DateTime?    @updatedAt @map("updated_at")
+  authorID     String       @map("author_id")
+  bestAnwserId String?      @unique @map("best_answer_id")
+  
+  answer       Answer[]
+  attachments  Attachment[]
+  comments     Comment[]
+  author       User         @relation(fields: [authorID], references: [id])
+  bestAnswer   Answer?      @relation("bestAnwser", fields: [bestAnwserId], references: [id])
+  tags         Tag[]        @relation("questionTags")
 
   @@map("questions")
 }
 
 model Answer {
-  id         String    @id @default(uuid())
-  content    String
-  createdAt  DateTime  @default(now()) @map("created_at")
-  updatedAt  DateTime? @updatedAt @map("updated_at")
-  authorID   String    @map("author_id")
-  questionId String    @map("question_id")
+  id           String       @id @default(uuid())
+  content      String
+  createdAt    DateTime     @default(now()) @map("created_at")
+  updatedAt    DateTime?    @updatedAt @map("updated_at")
+  authorID     String       @map("author_id")
+  questionId   String       @map("question_id")
 
-  author User @relation(fields: [authorID], references: [id])
-
-  bestAnwserOn Question? @relation("bestAnwser")
-
-  question    Question     @relation(fields: [questionId], references: [id])
-  comments    Comment[]
-  attachments Attachment[]
+  author       User         @relation(fields: [authorID], references: [id])
+  question     Question     @relation(fields: [questionId], references: [id])
+  attachments  Attachment[]
+  comments     Comment[]
+  bestAnwserOn Question?    @relation("bestAnwser")
 
   @@map("answer")
 }
@@ -73,22 +65,22 @@ model Comment {
   questionId String?   @map("question_id")
   answerId   String?   @map("answer_id")
 
-  author   User      @relation(fields: [authorId], references: [id])
-  question Question? @relation(fields: [questionId], references: [id])
-  answer   Answer?   @relation(fields: [answerId], references: [id])
+  answer     Answer?   @relation(fields: [answerId], references: [id])
+  author     User      @relation(fields: [authorId], references: [id])
+  question   Question? @relation(fields: [questionId], references: [id])
 
   @@map("comments")
 }
 
 model Attachment {
-  id         String  @id @default(uuid())
+  id         String    @id @default(uuid())
   title      String
   url        String
-  questionId String? @map("question_id")
-  answerId   String? @map("answer_id")
+  questionId String?   @map("question_id")
+  answerId   String?   @map("answer_id")
 
-  question Question? @relation(fields: [questionId], references: [id])
-  answer   Answer?   @relation(fields: [answerId], references: [id])
+  answer     Answer?   @relation(fields: [answerId], references: [id])
+  question   Question? @relation(fields: [questionId], references: [id])
 
   @@map("attachments")
 }
