@@ -11,43 +11,43 @@ import { AuthGuard } from '@nestjs/passport'
 import { CurrentUser } from '@/auth/current-user-decorator'
 import { UserPayload } from '@/auth/jwt-strategy'
 import { PrismaService } from '@/database/prisma/prisma.service'
-import { ZodValidationPipe } from '@/http/pipes/zod-validation-pipes'
+import { ZodValidationPipe } from '@/pipes/zod-validation-pipes'
 
-const createAnswerBodySchema = z.object({
+const createCommentBodySchema = z.object({
   content: z.string(),
 })
 
-const createAnswerBodyPipe = new ZodValidationPipe(createAnswerBodySchema)
+const createCommentBodyPipe = new ZodValidationPipe(createCommentBodySchema)
 
-type CreateAnswerBodySchema = z.infer<typeof createAnswerBodySchema>
+type CreateCommentBodySchema = z.infer<typeof createCommentBodySchema>
 
-@Controller('/questions/:questionId/comments')
+@Controller('/answers/:answerId/comments')
 @UseGuards(AuthGuard('jwt'))
-export class CreateCommentInQuestionController {
+export class CreateCommentInAnswerController {
   constructor(private prisma: PrismaService) {}
 
   @Post()
   async handle(
     @CurrentUser() user: UserPayload,
-    @Param('questionId') questionId: string,
-    @Body(createAnswerBodyPipe) body: CreateAnswerBodySchema,
+    @Param('answerId') answerId: string,
+    @Body(createCommentBodyPipe) body: CreateCommentBodySchema,
   ) {
     const userid = user.sub
     const { content } = body
 
-    const question = await this.prisma.question.findUnique({
+    const answer = await this.prisma.answer.findUnique({
       where: {
-        id: questionId,
+        id: answerId,
       },
     })
 
-    if (!question) {
-      throw new NotFoundException()
+    if (!answer) {
+      throw new NotFoundException('Answer with the provider id not found')
     }
 
     const createdComment = await this.prisma.comment.create({
       data: {
-        questionId,
+        answerId,
         content,
         authorId: userid,
       },

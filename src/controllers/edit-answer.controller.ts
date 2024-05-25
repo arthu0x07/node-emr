@@ -12,7 +12,7 @@ import { z } from 'zod'
 import { AuthGuard } from '@nestjs/passport'
 import { UserPayload } from '@/auth/jwt-strategy'
 import { CurrentUser } from '@/auth/current-user-decorator'
-import { ZodValidationPipe } from '@/http/pipes/zod-validation-pipes'
+import { ZodValidationPipe } from '@/pipes/zod-validation-pipes'
 import { PrismaService } from '@/database/prisma/prisma.service'
 
 const editAnswerBodySchema = z.object({

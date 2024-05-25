@@ -8,7 +8,7 @@ import {
 import { hash } from 'bcryptjs'
 import { z } from 'zod'
 import { PrismaService } from '@/database/prisma/prisma.service'
-import { ZodValidationPipe } from '@/http/pipes/zod-validation-pipes'
+import { ZodValidationPipe } from '@/pipes/zod-validation-pipes'
 
 const createAccBodySchema = z.object({
   name: z.string(),
