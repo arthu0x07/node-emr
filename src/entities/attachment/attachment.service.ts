@@ -6,7 +6,7 @@ import { randomUUID } from 'node:crypto'
 import {
   Attachment,
   UploadAndCreateAttachmentRequest,
-} from './upload-attachment.interface'
+} from './attachment.interface'
 import { InvalidAttachmentTypeError } from './errors/invalid-attachment-type.error'
 
 @Injectable()

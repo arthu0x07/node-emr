@@ -1,7 +1,7 @@
 // attachments.module.ts
 import { Module } from '@nestjs/common'
-import { UploadAttachmentController } from './upload-attachment.controller'
-import { AttachmentService } from './upload-attachment.service'
+import { UploadAttachmentController } from './attachment.controller'
+import { AttachmentService } from './attachment.service'
 import { DatabaseModule } from '@/database/database-module'
 import { ConfigModule } from '@nestjs/config'
 

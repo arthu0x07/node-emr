@@ -9,8 +9,8 @@ import {
 } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { AuthGuard } from '@nestjs/passport'
-import { AttachmentService } from './upload-attachment.service'
-import { Attachment } from './upload-attachment.interface'
+import { AttachmentService } from './attachment.service'
+import { Attachment } from './attachment.interface'
 import { ParseFilePipe } from './pipes/parse-file-pipe'
 
 @UseGuards(AuthGuard('jwt'))

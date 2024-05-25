@@ -3,8 +3,7 @@ import { ConfigModule } from '@nestjs/config'
 
 import { envSchema } from './env'
 import { AuthModule } from '@/auth/auth.module'
-
-import { HttpModule } from './modules/http-module'
+import { EntitiesModule } from '@/entities/entity-module'
 
 @Module({
   imports: [
@@ -13,7 +12,7 @@ import { HttpModule } from './modules/http-module'
       isGlobal: true,
     }),
     AuthModule,
-    HttpModule,
+    EntitiesModule,
   ],
 })
 export class AppModule {}
