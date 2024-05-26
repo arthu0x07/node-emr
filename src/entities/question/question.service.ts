@@ -27,6 +27,13 @@ export class QuestionService {
   async getQuestionBySlug(slug: string) {
     const question = await this.prisma.question.findUnique({
       where: { slug },
+      include: {
+        tags: {
+          select: {
+            name: true,
+          },
+        },
+      },
     })
 
     return question
@@ -57,8 +64,6 @@ export class QuestionService {
     const question = await this.prisma.question.findUnique({
       where: { id: questionId },
     })
-
-    console.log('test')
 
     if (!question) {
       throw new NotFoundException(`Question with ID ${questionId} not found`)
