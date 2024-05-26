@@ -1,0 +1,261 @@
+import { AppModule } from '@/app.module'
+import { PrismaService } from '@/database/prisma/prisma.service'
+import { INestApplication } from '@nestjs/common'
+import { JwtService } from '@nestjs/jwt'
+import { Test } from '@nestjs/testing'
+import { randomUUID } from 'node:crypto'
+import request from 'supertest'
+
+describe('AnswerController (E2E)', () => {
+  let app: INestApplication
+  let prisma: PrismaService
+  let jwt: JwtService
+
+  beforeAll(async () => {
+    const moduleRef = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile()
+
+    app = moduleRef.createNestApplication()
+
+    prisma = moduleRef.get(PrismaService)
+    jwt = moduleRef.get(JwtService)
+
+    await app.init()
+  })
+
+  beforeEach(async () => {
+    try {
+      await prisma.comment.deleteMany()
+      await prisma.answer.deleteMany()
+      await prisma.question.deleteMany()
+      await prisma.user.delete({
+        where: {
+          email: `${randomUUID()}@example.com`,
+        },
+      })
+    } catch (err) {}
+  })
+
+  afterAll(async () => {
+    await app.close()
+  })
+
+  test('[GET] /answers/:answerId/comments', async () => {
+    const user = await prisma.user.create({
+      data: {
+        name: 'test user',
+        email: `${randomUUID()}@example.com`,
+        password: '123456',
+      },
+    })
+
+    const accessToken = jwt.sign({ sub: user.id })
+
+    const question = await prisma.question.create({
+      data: {
+        title: 'test question',
+        content: 'test content',
+        slug: 'test-question',
+        authorID: user.id,
+      },
+    })
+
+    const answer = await prisma.answer.create({
+      data: {
+        content: 'test answer',
+        authorID: user.id,
+        questionId: question.id,
+      },
+    })
+
+    await prisma.comment.create({
+      data: {
+        content: 'test comment',
+        authorId: user.id,
+        answerId: answer.id,
+      },
+    })
+
+    const response = await request(app.getHttpServer())
+      .get(`/answers/${answer.id}/comments`)
+      .set('Authorization', `Bearer ${accessToken}`)
+      .query({ page: 1 })
+
+    expect(response.statusCode).toBe(200)
+    expect(response.body).toEqual({
+      comments: expect.arrayContaining([
+        expect.objectContaining({
+          content: 'test comment',
+          authorId: user.id,
+          answerId: answer.id,
+        }),
+      ]),
+    })
+  })
+
+  test('[POST] /answers/:answerId', async () => {
+    const user = await prisma.user.create({
+      data: {
+        name: 'test user',
+        email: `${randomUUID()}@example.com`,
+        password: '123456',
+      },
+    })
+
+    const accessToken = jwt.sign({ sub: user.id })
+
+    const question = await prisma.question.create({
+      data: {
+        title: 'test question',
+        content: 'test content',
+        slug: 'test-question',
+        authorID: user.id,
+      },
+    })
+
+    const response = await request(app.getHttpServer())
+      .post(`/answers/${question.id}`)
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send({ content: 'test answer content' })
+
+    expect(response.statusCode).toBe(201)
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        content: 'test answer content',
+        questionId: question.id,
+        authorID: user.id,
+      }),
+    )
+  })
+
+  test('[PUT] /answers/:answerId', async () => {
+    const user = await prisma.user.create({
+      data: {
+        name: 'test user',
+        email: `${randomUUID()}@example.com`,
+        password: '123456',
+      },
+    })
+
+    const accessToken = jwt.sign({ sub: user.id })
+
+    const question = await prisma.question.create({
+      data: {
+        title: 'test question',
+        content: 'test content',
+        slug: 'test-question',
+        authorID: user.id,
+      },
+    })
+
+    const answer = await prisma.answer.create({
+      data: {
+        content: 'test answer',
+        authorID: user.id,
+        questionId: question.id,
+      },
+    })
+
+    const response = await request(app.getHttpServer())
+      .put(`/answers/${answer.id}`)
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send({ content: 'updated answer content' })
+
+    expect(response.statusCode).toBe(200)
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        content: 'updated answer content',
+        id: answer.id,
+      }),
+    )
+  })
+
+  test('[PATCH] /answers/:answerId/select-best-answer', async () => {
+    const user = await prisma.user.create({
+      data: {
+        name: 'test user',
+        email: `${randomUUID()}@example.com`,
+        password: '123456',
+      },
+    })
+
+    const accessToken = jwt.sign({ sub: user.id })
+
+    const question = await prisma.question.create({
+      data: {
+        title: 'test question',
+        content: 'test content',
+        slug: 'test-question',
+        authorID: user.id,
+      },
+    })
+
+    const answer = await prisma.answer.create({
+      data: {
+        content: 'test answer',
+        authorID: user.id,
+        questionId: question.id,
+      },
+    })
+
+    const response = await request(app.getHttpServer())
+      .patch(`/answers/${answer.id}/select-best-answer`)
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send()
+
+    expect(response.statusCode).toBe(200)
+
+    const updatedQuestion = await prisma.question.findUnique({
+      where: { id: question.id },
+    })
+
+    expect(updatedQuestion).not.toBeNull()
+
+    if (updatedQuestion !== null) {
+      expect(updatedQuestion.bestAnswerId).toBe(answer.id)
+    }
+  })
+
+  test('[DELETE] /answers/:id', async () => {
+    const user = await prisma.user.create({
+      data: {
+        name: 'test user',
+        email: `${randomUUID()}@example.com`,
+        password: '123456',
+      },
+    })
+
+    const accessToken = jwt.sign({ sub: user.id })
+
+    const question = await prisma.question.create({
+      data: {
+        title: 'test question',
+        content: 'test content',
+        slug: 'test-question',
+        authorID: user.id,
+      },
+    })
+
+    const answer = await prisma.answer.create({
+      data: {
+        content: 'test answer',
+        authorID: user.id,
+        questionId: question.id,
+      },
+    })
+
+    const response = await request(app.getHttpServer())
+      .delete(`/answers/${answer.id}`)
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send()
+
+    expect(response.statusCode).toBe(204)
+
+    const deletedAnswer = await prisma.answer.findUnique({
+      where: { id: answer.id },
+    })
+
+    expect(deletedAnswer).toBeNull()
+  })
+})
