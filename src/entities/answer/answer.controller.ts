@@ -20,10 +20,12 @@ import { z } from 'zod'
 
 const createAnswerBodySchema = z.object({
   content: z.string(),
+  attachments: z.array(z.string().uuid()),
 })
 
 const editAnswerBodySchema = z.object({
   content: z.string(),
+  attachments: z.array(z.string().uuid()),
 })
 
 const pageQueryParamSchema = z
@@ -63,13 +65,14 @@ export class AnswerController {
     @Body(bodyValidationPipe) body: CreateAnswerBodySchema,
     @CurrentUser() user: UserPayload,
   ) {
-    const { content } = body
+    const { content, attachments } = body
     const userId = user.sub
 
     const createdAnswer = await this.answerService.createAnswer(
       userId,
       questionId,
       content,
+      attachments,
     )
     return { ...createdAnswer }
   }
@@ -80,13 +83,14 @@ export class AnswerController {
     @Body(editBodyValidationPipe) body: EditAnswerBodySchema,
     @CurrentUser() user: UserPayload,
   ) {
-    const { content } = body
+    const { content, attachments } = body
     const userId = user.sub
 
     const editedAnswer = await this.answerService.editAnswer(
       answerId,
       userId,
       content,
+      attachments,
     )
 
     return { ...editedAnswer }

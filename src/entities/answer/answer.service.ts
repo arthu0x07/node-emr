@@ -10,7 +10,12 @@ import { PrismaService } from '@/database/prisma/prisma.service'
 export class AnswerService {
   constructor(private prisma: PrismaService) {}
 
-  async createAnswer(userId: string, questionId: string, content: string) {
+  async createAnswer(
+    userId: string,
+    questionId: string,
+    content: string,
+    attachmentsIds?: string[],
+  ) {
     const questionExists = await this.prisma.question.findUnique({
       where: { id: questionId },
     })
@@ -24,6 +29,14 @@ export class AnswerService {
         content,
         questionId,
         authorID: userId,
+        attachments: {
+          connect:
+            attachmentsIds &&
+            attachmentsIds.map((attachmentId) => ({ id: attachmentId })),
+        },
+      },
+      include: {
+        attachments: true,
       },
     })
 
@@ -34,7 +47,12 @@ export class AnswerService {
     return createdAnswer
   }
 
-  async editAnswer(answerId: string, userId: string, content: string) {
+  async editAnswer(
+    answerId: string,
+    userId: string,
+    content: string,
+    attachmentsIds?: string[],
+  ) {
     if (!answerId) {
       throw new NotFoundException('Answer ID is required.')
     }
@@ -55,7 +73,17 @@ export class AnswerService {
 
     const editedAnswer = await this.prisma.answer.update({
       where: { id: answerId },
-      data: { content },
+      data: {
+        content,
+        attachments: {
+          connect:
+            attachmentsIds &&
+            attachmentsIds.map((attachmentId) => ({ id: attachmentId })),
+        },
+      },
+      include: {
+        attachments: true,
+      },
     })
 
     if (!editedAnswer) {
