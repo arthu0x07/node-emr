@@ -31,12 +31,13 @@ const createQuestionBodySchema = z.object({
   title: z.string(),
   content: z.string(),
   tags: z.array(z.string()).optional().default([]),
+  attachments: z.array(z.string().uuid()),
 })
-
 const editQuestionBodySchema = z.object({
   title: z.string(),
   content: z.string(),
   tags: z.array(z.string()).optional().default([]),
+  attachments: z.array(z.string().uuid()),
 })
 
 const queryValidationPipe = new ZodValidationPipe(pageQueryParamsSchema)
@@ -105,13 +106,14 @@ export class QuestionController {
     @Body(createBodyValidationPipe) body: CreateQuestionBodySchema,
   ) {
     const userId = user.sub
-    const { title, content, tags } = body
+    const { title, content, tags, attachments } = body
 
     const createdQuestion = await this.questionService.createQuestion(
       userId,
       title,
       content,
       tags,
+      attachments,
     )
 
     return { ...createdQuestion }
@@ -123,7 +125,7 @@ export class QuestionController {
     @Body(editBodyValidationPipe) body: EditQuestionBodySchema,
     @Param('id') questionId: string,
   ) {
-    const { title, content, tags } = body
+    const { title, content, tags, attachments } = body
     const userId = user.sub
 
     const updatedQuestion = await this.questionService.editQuestion(
@@ -132,6 +134,7 @@ export class QuestionController {
       title,
       content,
       tags,
+      attachments,
     )
 
     if (!updatedQuestion) {

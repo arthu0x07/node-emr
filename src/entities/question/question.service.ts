@@ -84,6 +84,7 @@ export class QuestionService {
     title: string,
     content: string,
     tags: string[],
+    attachmentsIds: string[],
   ) {
     await this.validateTags(tags)
     const slug = await this.generateUniqueSlug(title)
@@ -97,8 +98,12 @@ export class QuestionService {
         tags: {
           connect: tags.map((tag) => ({ name: tag })),
         },
+        attachments: {
+          connect: attachmentsIds.map((attachmentId) => ({ id: attachmentId })),
+        },
       },
       include: {
+        attachments: true,
         tags: true,
       },
     })
@@ -112,6 +117,7 @@ export class QuestionService {
     title: string,
     content: string,
     tags: string[],
+    attachmentsIds: string[],
   ) {
     await this.validateTags(tags)
     const slug = await this.generateUniqueSlug(title)
@@ -137,8 +143,14 @@ export class QuestionService {
         tags: {
           connect: tags.map((tag) => ({ name: tag })),
         },
+        attachments: {
+          connect: attachmentsIds.map((attachmentId) => ({ id: attachmentId })),
+        },
       },
-      include: { tags: true },
+      include: {
+        attachments: true,
+        tags: true,
+      },
     })
 
     return updatedQuestion
