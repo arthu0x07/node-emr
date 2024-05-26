@@ -3,7 +3,6 @@ import { PrismaService } from '@/database/prisma/prisma.service'
 import { INestApplication } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { Test } from '@nestjs/testing'
-import { warn } from 'node:console'
 import { randomUUID } from 'node:crypto'
 import request from 'supertest'
 
@@ -264,6 +263,25 @@ describe('Create question (E2E)', () => {
       data: [{ name: 'test-tag' }, { name: 'test-tag2' }],
     })
 
+    const attachmentData = [
+      {
+        title: 'Attachment 1',
+        url: 'url1',
+      },
+      {
+        title: 'Attachment 2',
+        url: 'url2',
+      },
+    ]
+
+    const attachments = await Promise.all(
+      attachmentData.map(async (attachment) => {
+        return await prisma.attachment.create({ data: attachment })
+      }),
+    )
+
+    const attachmentsIds = attachments.map((attachment) => attachment.id)
+
     const response = await request(app.getHttpServer())
       .post('/questions')
       .set('Authorization', `Bearer ${accessToken}`)
@@ -271,6 +289,7 @@ describe('Create question (E2E)', () => {
         title: 'New question',
         content: 'New question content',
         tags: ['test-tag', 'test-tag2'],
+        attachments: [...attachmentsIds],
       })
 
     expect(response.statusCode).toBe(201)
@@ -279,9 +298,17 @@ describe('Create question (E2E)', () => {
       where: {
         title: 'New question',
       },
+      include: {
+        attachments: true,
+      },
     })
 
     expect(questionOnDatabase).toBeTruthy()
+
+    if (questionOnDatabase !== null) {
+      expect(questionOnDatabase.attachments).toHaveLength(2)
+    }
+
     expect(response.body).toEqual(
       expect.objectContaining({
         content: 'New question content',
@@ -292,6 +319,22 @@ describe('Create question (E2E)', () => {
           }),
           expect.objectContaining({
             name: 'test-tag2',
+          }),
+        ]),
+        attachments: expect.arrayContaining([
+          expect.objectContaining({
+            id: expect.any(String),
+            title: expect.any(String),
+            url: expect.any(String),
+            questionId: expect.any(String),
+            answerId: null,
+          }),
+          expect.objectContaining({
+            id: expect.any(String),
+            title: expect.any(String),
+            url: expect.any(String),
+            questionId: expect.any(String),
+            answerId: null,
           }),
         ]),
       }),
@@ -313,6 +356,25 @@ describe('Create question (E2E)', () => {
       data: [{ name: 'test-tag' }, { name: 'test-tag2' }],
     })
 
+    const attachmentData = [
+      {
+        title: 'Attachment 1',
+        url: 'url1',
+      },
+      {
+        title: 'Attachment 2',
+        url: 'url2',
+      },
+    ]
+
+    const attachments = await Promise.all(
+      attachmentData.map(async (attachment) => {
+        return await prisma.attachment.create({ data: attachment })
+      }),
+    )
+
+    const attachmentsIds = attachments.map((attachment) => attachment.id)
+
     const createdQuestion = await prisma.question.create({
       data: {
         title: 'New question',
@@ -322,6 +384,9 @@ describe('Create question (E2E)', () => {
           connect: [{ name: 'test-tag' }, { name: 'test-tag2' }],
         },
         authorID: user.id,
+        attachments: {
+          connect: { id: attachmentsIds[0] },
+        },
       },
     })
 
@@ -334,8 +399,10 @@ describe('Create question (E2E)', () => {
         title: 'New question edited',
         content: 'New question edited content',
         tags: ['test-tag', 'test-tag2'],
+        attachments: [attachmentsIds[1]],
       })
 
+    expect(response.statusCode).toBe(200)
     expect(response.body).toEqual(
       expect.objectContaining({
         title: 'New question edited',
@@ -346,6 +413,22 @@ describe('Create question (E2E)', () => {
           }),
           expect.objectContaining({
             name: 'test-tag2',
+          }),
+        ]),
+        attachments: expect.arrayContaining([
+          expect.objectContaining({
+            id: expect.any(String),
+            title: expect.any(String),
+            url: expect.any(String),
+            questionId: expect.any(String),
+            answerId: null,
+          }),
+          expect.objectContaining({
+            id: expect.any(String),
+            title: expect.any(String),
+            url: expect.any(String),
+            questionId: expect.any(String),
+            answerId: null,
           }),
         ]),
       }),
