@@ -435,7 +435,7 @@ describe('Create question (E2E)', () => {
     )
   })
 
-  test('[PUT] /questions/:id', async () => {
+  test('[DELETE] /questions/:id', async () => {
     const user = await prisma.user.create({
       data: {
         name: 'teste teste',
