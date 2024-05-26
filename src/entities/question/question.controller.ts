@@ -31,13 +31,13 @@ const createQuestionBodySchema = z.object({
   title: z.string(),
   content: z.string(),
   tags: z.array(z.string()).optional().default([]),
-  attachments: z.array(z.string().uuid()),
+  attachments: z.array(z.string().uuid()).optional().default([]),
 })
 const editQuestionBodySchema = z.object({
   title: z.string(),
   content: z.string(),
   tags: z.array(z.string()).optional().default([]),
-  attachments: z.array(z.string().uuid()),
+  attachments: z.array(z.string().uuid()).optional().default([]),
 })
 
 const queryValidationPipe = new ZodValidationPipe(pageQueryParamsSchema)
