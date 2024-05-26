@@ -94,7 +94,7 @@ describe('AnswerController (E2E)', () => {
     })
   })
 
-  test('[POST] /answers/:answerId', async () => {
+  test('[POST] /answers/:questionId', async () => {
     const user = await prisma.user.create({
       data: {
         name: 'test user',
@@ -114,10 +114,32 @@ describe('AnswerController (E2E)', () => {
       },
     })
 
+    const attachmentData = [
+      {
+        title: 'Attachment 1',
+        url: 'url1',
+      },
+      {
+        title: 'Attachment 2',
+        url: 'url2',
+      },
+    ]
+
+    const attachments = await Promise.all(
+      attachmentData.map(async (attachment) => {
+        return await prisma.attachment.create({ data: attachment })
+      }),
+    )
+
+    const attachmentsIds = attachments.map((attachment) => attachment.id)
+
     const response = await request(app.getHttpServer())
       .post(`/answers/${question.id}`)
       .set('Authorization', `Bearer ${accessToken}`)
-      .send({ content: 'test answer content' })
+      .send({
+        content: 'test answer content',
+        attachments: [...attachmentsIds],
+      })
 
     expect(response.statusCode).toBe(201)
     expect(response.body).toEqual(
@@ -125,6 +147,22 @@ describe('AnswerController (E2E)', () => {
         content: 'test answer content',
         questionId: question.id,
         authorID: user.id,
+        attachments: expect.arrayContaining([
+          expect.objectContaining({
+            id: expect.any(String),
+            title: expect.any(String),
+            url: expect.any(String),
+            answerId: expect.any(String),
+            questionId: null,
+          }),
+          expect.objectContaining({
+            id: expect.any(String),
+            title: expect.any(String),
+            url: expect.any(String),
+            answerId: expect.any(String),
+            questionId: null,
+          }),
+        ]),
       }),
     )
   })
@@ -149,24 +187,60 @@ describe('AnswerController (E2E)', () => {
       },
     })
 
-    const answer = await prisma.answer.create({
+    const attachmentData = [
+      {
+        title: 'Attachment 1',
+        url: 'url1',
+      },
+      {
+        title: 'Attachment 2',
+        url: 'url2',
+      },
+    ]
+
+    const attachments = await Promise.all(
+      attachmentData.map(async (attachment) => {
+        return await prisma.attachment.create({ data: attachment })
+      }),
+    )
+
+    const attachmentsIds = attachments.map((attachment) => attachment.id)
+
+    const createdAnswer = await prisma.answer.create({
       data: {
         content: 'test answer',
         authorID: user.id,
         questionId: question.id,
+        attachments: {
+          connect: { id: attachmentsIds[0] },
+        },
       },
     })
 
+    expect(createdAnswer).toBeTruthy()
+
     const response = await request(app.getHttpServer())
-      .put(`/answers/${answer.id}`)
+      .put(`/answers/${createdAnswer.id}`)
       .set('Authorization', `Bearer ${accessToken}`)
-      .send({ content: 'updated answer content' })
+      .send({
+        content: 'updated answer content',
+        attachments: [attachmentsIds[1]],
+      })
 
     expect(response.statusCode).toBe(200)
     expect(response.body).toEqual(
       expect.objectContaining({
         content: 'updated answer content',
-        id: answer.id,
+        id: createdAnswer.id,
+        attachments: expect.arrayContaining([
+          expect.objectContaining({
+            id: expect.any(String),
+            title: expect.any(String),
+            url: expect.any(String),
+            answerId: expect.any(String),
+            questionId: null,
+          }),
+        ]),
       }),
     )
   })

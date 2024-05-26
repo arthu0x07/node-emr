@@ -20,12 +20,12 @@ import { z } from 'zod'
 
 const createAnswerBodySchema = z.object({
   content: z.string(),
-  attachments: z.array(z.string().uuid()),
+  attachments: z.array(z.string().uuid()).optional().default([]),
 })
 
 const editAnswerBodySchema = z.object({
   content: z.string(),
-  attachments: z.array(z.string().uuid()),
+  attachments: z.array(z.string().uuid()).optional().default([]),
 })
 
 const pageQueryParamSchema = z
