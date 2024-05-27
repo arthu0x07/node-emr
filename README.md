@@ -33,13 +33,19 @@ Esta consiste em uma API de perguntas, respostas e comentários. O projeto é co
 
 - Contas de Usuário: Os usuários podem criar contas personalizadas para acessar todas as funcionalidades da plataforma de forma integrada e personalizada.
 
+<br /><br />
+## Documentação dos Endpoints:
+[Link para a Documentação](https://checkered-quail-7c8.notion.site/API-Documentation-d87a74b7ed60407f8ba4258009f83264)
+
 
 <br /><br />
 ## Variáveis de Ambiente
 
 Para rodar esse projeto, você vai precisar adicionar as seguintes variáveis de ambiente no seu .env
 
-`DATABASE_URL` - *URL utilizada para se conectar com o banco de dados.*
+`DATABASE_URL` - *URL utilizada para se conectar com o banco de dados. (termina com @postgres:5432)*
+
+`DATABASE_URL_TESTS` - *URL utilizada para se conectar com o banco de dados ao rodar os testes (termina com @localhost:5432)* 
 
 `JWT_PRIVATE_KEY` - *Esta chave é usada para assinar os tokens JWT no lado do servidor.*
 
@@ -106,7 +112,7 @@ Para rodar os testes, faça o processo de instalação do projeto e rode o segui
 ```
 
 <br /><br />
-## Funcionalides
+## Funcionalidades
 
 - Utilização de JWT para autenticação.
 
