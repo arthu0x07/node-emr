@@ -1,6 +1,5 @@
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common'
 import { PrismaClient } from '@prisma/client'
-import { seedTags } from 'prisma/seed/tags.seed'
 
 @Injectable()
 export class PrismaService
@@ -14,7 +13,6 @@ export class PrismaService
   }
 
   async onModuleInit() {
-    await seedTags(this)
     return this.$connect()
   }
 

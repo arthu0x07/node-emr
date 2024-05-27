@@ -1,21 +1,12 @@
-import { PrismaService } from '@/database/prisma/prisma.service'
-
-const tagsToSeed = ['node', 'nestjs', 'prisma']
-
-export async function seedTags(prisma: PrismaService) {
+// prisma/seed/tags.seed.ts
+export async function seedTags(prisma) {
+  const tagsToSeed = ['node', 'nestjs', 'prisma']
   for (const tagName of tagsToSeed) {
     const existingTag = await prisma.tag.findUnique({
-      where: {
-        name: tagName,
-      },
+      where: { name: tagName },
     })
-
     if (!existingTag) {
-      await prisma.tag.create({
-        data: {
-          name: tagName,
-        },
-      })
+      await prisma.tag.create({ data: { name: tagName } })
     }
   }
 }
