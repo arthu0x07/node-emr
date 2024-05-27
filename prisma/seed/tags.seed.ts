@@ -1,4 +1,3 @@
-// prisma/seed/tags.seed.ts
 export async function seedTags(prisma) {
   const tagsToSeed = ['node', 'nestjs', 'prisma']
   for (const tagName of tagsToSeed) {

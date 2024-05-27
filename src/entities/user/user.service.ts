@@ -1,4 +1,3 @@
-// create-acc.service.ts
 import { ConflictException, Injectable } from '@nestjs/common'
 import { hash } from 'bcryptjs'
 import { PrismaService } from '@/database/prisma/prisma.service'

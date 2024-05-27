@@ -1,4 +1,3 @@
-// upload-attachment.controller.ts
 import {
   Controller,
   Post,

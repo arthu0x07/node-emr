@@ -1,6 +1,6 @@
 # Projeto Back End API de Perguntas, Respostas e Comentários
 
-Aqui está o README para o projeto de back-end de uma API de perguntas e respostas com comentários. O projeto é construído com Nest.js como framework principal, usando Prisma como ORM para interagir com o banco de dados PostgreSQL. Todo o código é desenvolvido em TypeScript para garantir um desenvolvimento mais seguro e eficiente. <br /><br />
+Esta consiste em uma API de perguntas, respostas e comentários. O projeto é construído com Nest.js como framework principal, usando Prisma como ORM para interagir com o banco de dados PostgreSQL. Todo o código é desenvolvido em TypeScript para garantir um desenvolvimento mais seguro e eficiente. <br /><br />
 ### Tecnologias Utilizadas:
   - Framework: Nest.js
   - ORM: Prisma

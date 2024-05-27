@@ -1,4 +1,3 @@
-// attachments.module.ts
 import { Module } from '@nestjs/common'
 import { UploadAttachmentController } from './attachment.controller'
 import { AttachmentService } from './attachment.service'
