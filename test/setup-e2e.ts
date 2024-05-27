@@ -12,11 +12,11 @@ config({ path: '.env', override: true })
 config({ path: '.env.test', override: true })
 
 function generateUniqueDatabaseURL(schemaId: string) {
-  if (!process.env.DATABASE_URL) {
+  if (!process.env.DATABASE_URL_TESTS) {
     throw new Error('Please provider a DATABASE_URL environment variable')
   }
 
-  const url = new URL(process.env.DATABASE_URL)
+  const url = new URL(process.env.DATABASE_URL_TESTS)
 
   url.searchParams.set('schema', schemaId)
 
